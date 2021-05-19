@@ -13,7 +13,7 @@ public class Logic {
     public int[] convertCommandToCoordinates(String command){
         
         
-        //coordinates format example; c3-d4
+        //coordinates format example; a3-d4
         
         String[] commands = command.split("-");
         
@@ -23,10 +23,10 @@ public class Logic {
 
         int[] coordinates = new int[4];
         
-        coordinates[0] = letterToNumber(cmd1[0]);
-        coordinates[1] = Integer.valueOf(cmd1[1]);
-        coordinates[2] = letterToNumber(cmd2[0]);
-        coordinates[3] = Integer.valueOf(cmd2[1]);
+        coordinates[1] = letterToNumber(cmd1[0])-1;
+        coordinates[0] = Integer.valueOf(cmd1[1])-1;
+        coordinates[3] = letterToNumber(cmd2[0])-1;
+        coordinates[2] = Integer.valueOf(cmd2[1])-1;
         
         
         return coordinates;
@@ -46,29 +46,38 @@ public class Logic {
         return 0;
     }
     
-    public void move(String command){
-        int[] coordinates = convertCommandToCoordinates(command);
+    public char[][] move(String command){
         
+        int[] coordinates = convertCommandToCoordinates(command);
+        logicBoard = board.getBoard();
+        
+        if(isMoveValid(coordinates)){
         // test
         System.out.println("Coodinates: ");
         System.out.println(coordinates[0] + ", " + coordinates[1]);
         System.out.println(coordinates[2] + ", " + coordinates[3]);
-        //
+        // 
         
         
-        logicBoard = board.getBoard();
         char piece = logicBoard[coordinates[0]][coordinates[1]];
         logicBoard[coordinates[0]][coordinates[1]] = ' ';
         logicBoard[coordinates[2]][coordinates[3]] = piece;
         
-        board.setBoard(logicBoard);
         board.printBoard();
         
+        
+        
+        } else System.out.println("Move invalid");
+        
+        return logicBoard;
     }
     
     public boolean isMoveValid(int[] coordinates){
-        // if coor[0] == coor[3] and coor[1] == coor[2] (tylko w przypadku bicia)
-        return false;
+        // abs rożnica między coor 0 i coor 2 == 1 & coor 1 i coor 3 == 1
+        logicBoard = board.getBoard();
+        
+        return (Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1)
+                && logicBoard[coordinates[2]][coordinates[3]] == ' ';
     }
     
 }

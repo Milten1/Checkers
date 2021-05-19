@@ -29,6 +29,7 @@ public class Game {
             if(command.equals("exit")) break;
             
             commands(command);
+            
         }
         
     }
@@ -52,7 +53,7 @@ public class Game {
                 board.printBoard();
                 break;
             }
-            default: logic.move(command);
+            default: board.setBoard(logic.move(command));
         }
         
         
