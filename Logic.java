@@ -4,11 +4,23 @@ package com.mycompany.checkers;
 public class Logic {
     private char[][] logicBoard;
     private Board board;
+    private Pieces player;
+    private int points; // if white get point, +1. If black get point -1
 
     public Logic() {
         this.logicBoard = new char[8][8];
         this.board = new Board();
-    }   
+        this.player = new Pieces();
+        this.points = 0;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+    
+    public void changePlayer(){
+        player.changePlayer();
+    }
     
     public int[] convertCommandToCoordinates(String command){
         
@@ -51,7 +63,7 @@ public class Logic {
         int[] coordinates = convertCommandToCoordinates(command);
         logicBoard = board.getBoard();
         
-        if(isMoveValid(coordinates)){
+        if(isMoveValid(coordinates) == 1){
         // test
         System.out.println("Coodinates: ");
         System.out.println(coordinates[0] + ", " + coordinates[1]);
@@ -67,17 +79,49 @@ public class Logic {
         
         
         
-        } else System.out.println("Move invalid");
+        } else if(isMoveValid(coordinates) == 2){
+            
+            char enemy = 'O';
+            if(player.getPlayer() == 'O') enemy = 'X';
+            
+            if(enemy == 'O') points--;
+            else points++;
+            
+            
+            logicBoard[coordinates[0]+1][coordinates[1]+1] = ' '; //enemy coordinate
+            
+            char piece = logicBoard[coordinates[0]][coordinates[1]];
+            logicBoard[coordinates[0]][coordinates[1]] = ' ';
+            logicBoard[coordinates[2]][coordinates[3]] = piece;
+            
+            board.printBoard();    
+
+        } else if(isMoveValid(coordinates) == 0) System.out.println("Move invalid");
+
         
         return logicBoard;
     }
     
-    public boolean isMoveValid(int[] coordinates){
-        // abs rożnica między coor 0 i coor 2 == 1 & coor 1 i coor 3 == 1
+    public int isMoveValid(int[] coordinates){ //zastosować coś w rodzaju logiki trójwartościowej
+        
+        char enemy = 'O';
+        if(player.getPlayer() == 'O') enemy = 'X';
+        
+        int[] enemyCoor = new int[2];
+        enemyCoor[0] = coordinates[0]+1;
+        enemyCoor[1] = coordinates[1]+1;
+        
+        
+        // abs rożnica między coor 0 i coor 2 == 1 & coor 1 i coor 3 == 1 (albo 2 dla bicia)
         logicBoard = board.getBoard();
         
-        return (Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1)
-                && logicBoard[coordinates[2]][coordinates[3]] == ' ';
+        if((Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1) && (logicBoard[coordinates[2]][coordinates[3]] == ' ') 
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 1;
+        
+        if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)  
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement dla bicia
+        
+        return 0;
     }
     
 }
