@@ -29,7 +29,12 @@ public class Game {
             if(command.equals("exit")) break;
             
             commands(command);
+            
         }
+        
+        
+        //end of the game
+        System.out.println(logic.getPlayer() + " won!");
         
     }
     
@@ -52,7 +57,13 @@ public class Game {
                 board.printBoard();
                 break;
             }
-            default: logic.move(command);
+            default: {
+                board.setBoard(logic.move(command));
+                
+                if(board.getBoard()[0][8] == 't') logic.changePlayer();
+                
+                System.out.println("Move of player: " + logic.getPlayer());
+            }
         }
         
         
