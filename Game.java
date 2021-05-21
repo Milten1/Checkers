@@ -7,12 +7,10 @@ public class Game {
     private Board board;
     private Logic logic;
     private Scanner scanner;
-    private Pieces player;
 
     public Game() {
         this.board = new Board();
         this.logic = new Logic();
-        this.player = new Pieces();
         this.scanner = new Scanner(System.in);
     }
 
@@ -36,7 +34,7 @@ public class Game {
         
         
         //end of the game
-        System.out.println(player.getPlayer() + " won!");
+        System.out.println(logic.getPlayer() + " won!");
         
     }
     
@@ -61,7 +59,10 @@ public class Game {
             }
             default: {
                 board.setBoard(logic.move(command));
-                logic.changePlayer();
+                
+                if(board.getBoard()[0][8] == 't') logic.changePlayer();
+                
+                System.out.println("Move of player: " + logic.getPlayer());
             }
         }
         

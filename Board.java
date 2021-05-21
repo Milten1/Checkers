@@ -6,7 +6,7 @@ public class Board {
     private Pieces piece;
     
     public Board(){
-        board = new char[8][8];
+        board = new char[8][9]; // additional field [0][8] for storing true false statement
         this.piece = new Pieces();
         
         initializeBoard();

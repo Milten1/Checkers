@@ -8,7 +8,8 @@ public class Logic {
     private int points; // if white get point, +1. If black get point -1
 
     public Logic() {
-        this.logicBoard = new char[8][8];
+        this.logicBoard = new char[8][9];
+        
         this.board = new Board();
         this.player = new Pieces();
         this.points = 0;
@@ -20,6 +21,10 @@ public class Logic {
     
     public void changePlayer(){
         player.changePlayer();
+    }
+    
+    public char getPlayer(){
+        return player.getPlayer();
     }
     
     public int[] convertCommandToCoordinates(String command){
@@ -58,10 +63,16 @@ public class Logic {
         return 0;
     }
     
+    
+    
+    
+    
+    
     public char[][] move(String command){
         
         int[] coordinates = convertCommandToCoordinates(command);
         logicBoard = board.getBoard();
+        logicBoard[0][8] = 'f';
         
         if(isMoveValid(coordinates) == 1){
         // test
@@ -76,7 +87,7 @@ public class Logic {
         logicBoard[coordinates[2]][coordinates[3]] = piece;
         
         board.printBoard();
-        
+        logicBoard[0][8] = 't';
         
         
         } else if(isMoveValid(coordinates) == 2){
@@ -94,7 +105,9 @@ public class Logic {
             logicBoard[coordinates[0]][coordinates[1]] = ' ';
             logicBoard[coordinates[2]][coordinates[3]] = piece;
             
-            board.printBoard();    
+            
+            board.printBoard();
+            logicBoard[0][8] = 't';
 
         } else if(isMoveValid(coordinates) == 0) System.out.println("Move invalid");
 
