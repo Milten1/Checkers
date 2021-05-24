@@ -57,6 +57,9 @@ public class Game {
                 board.printBoard();
                 break;
             }
+            case "empty":{
+                board.printEmptyBoard(); //for tests
+            }
             default: {
                 board.setBoard(logic.move(command));
                 

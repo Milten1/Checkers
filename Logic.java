@@ -75,19 +75,19 @@ public class Logic {
         logicBoard[0][8] = 'f';
         
         if(isMoveValid(coordinates) == 1){
-        // test
-        System.out.println("Coodinates: ");
-        System.out.println(coordinates[0] + ", " + coordinates[1]);
-        System.out.println(coordinates[2] + ", " + coordinates[3]);
-        // 
-        
-        
-        char piece = logicBoard[coordinates[0]][coordinates[1]];
-        logicBoard[coordinates[0]][coordinates[1]] = ' ';
-        logicBoard[coordinates[2]][coordinates[3]] = piece;
-        
-        board.printBoard();
-        logicBoard[0][8] = 't';
+            
+            if(checkMandatoryCapture()){
+                System.out.println("Capturing is mandatory");
+            } else{
+                char piece = logicBoard[coordinates[0]][coordinates[1]];
+                logicBoard[coordinates[0]][coordinates[1]] = ' ';
+                logicBoard[coordinates[2]][coordinates[3]] = piece;
+                
+                board.printBoard();
+                logicBoard[0][8] = 't';
+            }
+            
+            
         
         
         } else if(isMoveValid(coordinates) == 2){
@@ -115,7 +115,7 @@ public class Logic {
         return logicBoard;
     }
     
-    public int isMoveValid(int[] coordinates){ //zastosować coś w rodzaju logiki trójwartościowej
+    public int isMoveValid(int[] coordinates){
         
         char enemy = 'O';
         if(player.getPlayer() == 'O') enemy = 'X';
@@ -125,7 +125,6 @@ public class Logic {
         enemyCoor[1] = coordinates[1]+1;
         
         
-        // abs rożnica między coor 0 i coor 2 == 1 & coor 1 i coor 3 == 1 (albo 2 dla bicia)
         logicBoard = board.getBoard();
         
         if((Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1) && (logicBoard[coordinates[2]][coordinates[3]] == ' ') 
@@ -136,5 +135,30 @@ public class Logic {
         
         return 0;
     }
+    
+    public boolean checkMandatoryCapture(){
+        logicBoard = board.getBoard();
+        
+        char enemy = 'O';
+        if(player.getPlayer() == 'O') enemy = 'X';
+        
+        // sprawdza tablicę szukając pionków, a jak znajdzie, to sprawdza czy w rogach jest przeciwnik. Jeśli jest to sprawdza czy można go zbić
+        
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(logicBoard[i][j] == 'X' || logicBoard[i][j] == 'O'){
+                    if((logicBoard[i+1][j+1] == enemy && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i-1][j-1] == enemy && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i+1][j-1] == enemy && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i-1][j+1] == enemy && logicBoard[i-2][j+2] == ' ')) return true;
+                    
+                    // index out of bounds. use try-catch
+                    
+                }
+            }
+        }
+        
+        return false;
+    }    
     
 }

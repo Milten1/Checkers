@@ -45,7 +45,6 @@ public class Board {
             }
              System.out.println();
         }
-         
     }
 
     public char[][] getBoard() {
@@ -54,6 +53,22 @@ public class Board {
 
     public void setBoard(char[][] board) {
         this.board = board;
+    }
+    
+    public void printEmptyBoard(){//for tests
+        System.out.print("  ");
+        for(char ch = 'A'; ch <= 'H'; ch++ ){
+            System.out.print(" " + ch + " ");
+        }
+        
+        System.out.println();
+         for(int i = 7; i >= 0; i--){
+             System.out.print(i+1 + " ");
+            for(int j = 0; j < 8; j++){
+                System.out.print("[" + i + "" + j + "]");
+            }
+             System.out.println();
+        }
     }
     
 }
