@@ -65,9 +65,6 @@ public class Logic {
     
     
     
-    
-    
-    
     public char[][] move(String command){
         
         int[] coordinates = convertCommandToCoordinates(command);
@@ -131,7 +128,7 @@ public class Logic {
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 1;
         
         if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)  
-            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement dla bicia
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement for capturing
         
         return 0;
     }
@@ -139,26 +136,40 @@ public class Logic {
     public boolean checkMandatoryCapture(){
         logicBoard = board.getBoard();
         
+        
         char enemy = 'O';
         if(player.getPlayer() == 'O') enemy = 'X';
         
-        // sprawdza tablicę szukając pionków, a jak znajdzie, to sprawdza czy w rogach jest przeciwnik. Jeśli jest to sprawdza czy można go zbić
-        
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
-                if(logicBoard[i][j] == 'X' || logicBoard[i][j] == 'O'){
-                    if((logicBoard[i+1][j+1] == enemy && logicBoard[i+2][j+2] == ' ') ||
-                       (logicBoard[i-1][j-1] == enemy && logicBoard[i-2][j-2] == ' ') ||
-                       (logicBoard[i+1][j-1] == enemy && logicBoard[i+2][j-2] == ' ') ||
-                       (logicBoard[i-1][j+1] == enemy && logicBoard[i-2][j+2] == ' ')) return true;
+                try{
+                    if((logicBoard[i][j] == 'X' && logicBoard[i+1][j+1] == 'O' && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == 'X' && logicBoard[i-1][j-1] == 'O' && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == 'X' && logicBoard[i+1][j-1] == 'O' && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == 'X' && logicBoard[i-1][j+1] == 'O' && logicBoard[i-2][j+2] == ' ')
+                            
+                   ||( (logicBoard[i][j] == '0' && logicBoard[i+1][j+1] == 'X' && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == '0' && logicBoard[i-1][j-1] == 'X' && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == '0' && logicBoard[i+1][j-1] == 'X' && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == '0' && logicBoard[i-1][j+1] == 'X' && logicBoard[i-2][j+2] == ' '))) return true;
                     
-                    // index out of bounds. use try-catch
-                    
-                }
+                }catch(ArrayIndexOutOfBoundsException e){
+                    //nothing
+                }   
             }
         }
         
+        
         return false;
-    }    
+    }
+    
+    public void saveGame(String name){
+        // saving game
+    }
+    
+    public void loadGame(String name){
+        // loading game
+    }
+    
     
 }
