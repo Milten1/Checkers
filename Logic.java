@@ -65,9 +65,6 @@ public class Logic {
     
     
     
-    
-    
-    
     public char[][] move(String command){
         
         int[] coordinates = convertCommandToCoordinates(command);
@@ -144,21 +141,37 @@ public class Logic {
         
         // sprawdza tablicę szukając pionków, a jak znajdzie, to sprawdza czy w rogach jest przeciwnik. Jeśli jest to sprawdza czy można go zbić
         
+        
+        //szuka pionków
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 if(logicBoard[i][j] == 'X' || logicBoard[i][j] == 'O'){
-                    if((logicBoard[i+1][j+1] == enemy && logicBoard[i+2][j+2] == ' ') ||
-                       (logicBoard[i-1][j-1] == enemy && logicBoard[i-2][j-2] == ' ') ||
-                       (logicBoard[i+1][j-1] == enemy && logicBoard[i+2][j-2] == ' ') ||
-                       (logicBoard[i-1][j+1] == enemy && logicBoard[i-2][j+2] == ' ')) return true;
-                    
-                    // index out of bounds. use try-catch
-                    
+                    for(int x = 0; i < 8; i++){
+                        for(int y = 0; j < 8; j++){
+                            try {
+                                if((logicBoard[x+1][y+1] == enemy && logicBoard[x+2][y+2] == ' ') ||
+                                   (logicBoard[x-1][y-1] == enemy && logicBoard[x-2][y-2] == ' ') ||
+                                   (logicBoard[x+1][y-1] == enemy && logicBoard[x+2][y-2] == ' ') ||
+                                   (logicBoard[x-1][y+1] == enemy && logicBoard[x-2][y+2] == ' ')) return true;
+                            } catch (ArrayIndexOutOfBoundsException e){
+                                //nothing
+                            }
+                        }
+                    }
                 }
             }
         }
         
         return false;
-    }    
+    }
+    
+    public void saveGame(String name){
+        // saving game
+    }
+    
+    public void loadGame(String name){
+        // loading game
+    }
+    
     
 }

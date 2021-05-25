@@ -60,6 +60,16 @@ public class Game {
             case "empty":{
                 board.printEmptyBoard(); //for tests
             }
+            case "save":{
+                System.out.print("Enter name for save: ");
+                String name = scanner.next();
+                logic.saveGame(name);
+            }
+            case "load":{
+                System.out.print("Enter name of the saved game: ");
+                String name = scanner.next();
+                logic.loadGame(name);
+            }
             default: {
                 board.setBoard(logic.move(command));
                 
