@@ -10,7 +10,7 @@ public class Board {
         this.piece = new Pieces();
         
         initializeBoard();
-        // captureTest();
+        //captureTest();
     }
     
     public void initializeBoard(){
@@ -81,8 +81,10 @@ public class Board {
             }
         }
         
-        board[3][3] = 'X';
-        board[5][5] = 'O';
+        board[3][5] = 'O';
+        board[4][4] = 'X';
+        board[4][2] = 'X';
+        board[2][2] = 'X';
     }
     
 }

@@ -26,6 +26,7 @@ public class Game {
             
             System.out.print("> ");
             String command = scanner.next();
+            command = command.toLowerCase();
             if(command.equals("exit")) break;
             
             commands(command);

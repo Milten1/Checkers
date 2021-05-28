@@ -96,7 +96,7 @@ public class Logic {
             else points++;
             
             
-            logicBoard[coordinates[0]+1][coordinates[1]+1] = ' '; //enemy coordinate
+            logicBoard[(coordinates[0]+coordinates[2])/2][(coordinates[1]+coordinates[3])/2] = ' '; //enemy coordinate
             
             char piece = logicBoard[coordinates[0]][coordinates[1]];
             logicBoard[coordinates[0]][coordinates[1]] = ' ';
@@ -118,8 +118,8 @@ public class Logic {
         if(player.getPlayer() == 'O') enemy = 'X';
         
         int[] enemyCoor = new int[2];
-        enemyCoor[0] = coordinates[0]+1;
-        enemyCoor[1] = coordinates[1]+1;
+        enemyCoor[0] = (coordinates[0]+coordinates[2])/2;
+        enemyCoor[1] = (coordinates[1]+coordinates[3])/2;
         
         
         logicBoard = board.getBoard();
@@ -127,7 +127,7 @@ public class Logic {
         if((Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1) && (logicBoard[coordinates[2]][coordinates[3]] == ' ') 
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 1;
         
-        if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)  
+        if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement for capturing
         
         return 0;
