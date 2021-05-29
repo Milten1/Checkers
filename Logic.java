@@ -67,8 +67,12 @@ public class Logic {
     
     public char[][] move(String command){
         
+        
         int[] coordinates = convertCommandToCoordinates(command);
         logicBoard = board.getBoard();
+
+        promoteToKing();
+
         logicBoard[0][8] = 'f';
         
         if(isMoveValid(coordinates) == 1){
@@ -81,9 +85,16 @@ public class Logic {
                 logicBoard[coordinates[2]][coordinates[3]] = piece;
                 
                 board.printBoard();
+                
                 logicBoard[0][8] = 't';
             }
             
+            // test
+            // e3-d4
+            // f6-g5
+            // g3-f4
+            // g5-e3
+            // e3-c5
             
         
         
@@ -104,10 +115,9 @@ public class Logic {
             
             
             board.printBoard();
-            logicBoard[0][8] = 't';
+            if(!(checkMandatoryCapture())) logicBoard[0][8] = 't';
 
         } else if(isMoveValid(coordinates) == 0) System.out.println("Move invalid");
-
         
         return logicBoard;
     }
@@ -160,6 +170,25 @@ public class Logic {
         }
         
         
+        return false;
+    }
+    
+    public void promoteToKing(){ //działa z opóźnieniem jednego ruchu
+        
+        for(int i = 0; i < 8; i++){
+            if(logicBoard[0][i] == 'X') logicBoard[0][i] = 'B';
+        }
+        
+        for(int i = 0; i < 8; i++){
+            if(logicBoard[7][i] == 'O') logicBoard[7][i] = 'A';
+        }
+    }
+    
+    public void kingMove(){
+        //to do
+    }
+    
+    public boolean onePieceOnBoard(){
         return false;
     }
     

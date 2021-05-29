@@ -24,6 +24,8 @@ public class Game {
         
         while(true){
             
+            if(logic.onePieceOnBoard()) break;
+            
             System.out.print("> ");
             String command = scanner.next();
             command = command.toLowerCase();
@@ -34,7 +36,7 @@ public class Game {
         }
         
         
-        //end of the game
+        //end of the game //to do
         System.out.println(logic.getPlayer() + " won!");
         
     }
