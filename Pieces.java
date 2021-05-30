@@ -16,6 +16,14 @@ public class Pieces {
     public char getWhite() {
         return white;
     }
+
+    public char getBlackKing() {
+        return blackKing;
+    }
+
+    public char getWhiteKing() {
+        return whiteKing;
+    }
     
     public void changePlayer(){
         if(player == 'X') player = 'O';

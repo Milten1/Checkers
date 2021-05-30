@@ -81,12 +81,15 @@ public class Board {
             }
         }
         
-        board[3][5] = 'X';
-        board[4][4] = 'X';
-        board[4][2] = 'O';
-        board[2][2] = 'X';
-        board[6][0] = 'O';
-        board[1][1] = 'X';
+//        board[3][5] = 'X';
+//        board[4][4] = 'X';
+//        board[4][2] = 'O';
+//        board[2][2] = 'X';
+//        board[6][0] = 'O';
+//        board[1][1] = 'X';
+
+          board[1][1] = 'O';
+          board[2][2] = 'X';
         
     }
     

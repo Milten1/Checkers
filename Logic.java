@@ -69,37 +69,40 @@ public class Logic {
         
         
         int[] coordinates = convertCommandToCoordinates(command);
+        char piece = logicBoard[coordinates[0]][coordinates[1]];
         logicBoard = board.getBoard();
-
-        promoteToKing();
+        
 
         logicBoard[0][8] = 'f';
         
-        if(isMoveValid(coordinates) == 1){
+        if((isMoveValid(coordinates) == 1) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 1) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 1)){
+            normalMove(coordinates);
+        } else if((isMoveValid(coordinates) == 2) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 2) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 2)){
+            capturingMove(coordinates);
+        } else if((isMoveValid(coordinates) == 0) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 0) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 0)){
+            System.out.println("Move invalid");
+        }
+        
+        return logicBoard;
+    }
+    
+    public void normalMove(int[] coordinates){
+        if(checkMandatoryCapture()){
+            System.out.println("Capturing is mandatory");
+        } else{
+            char piece = logicBoard[coordinates[0]][coordinates[1]];
+            logicBoard[coordinates[0]][coordinates[1]] = ' ';
+            logicBoard[coordinates[2]][coordinates[3]] = piece;
             
-            if(checkMandatoryCapture()){
-                System.out.println("Capturing is mandatory");
-            } else{
-                char piece = logicBoard[coordinates[0]][coordinates[1]];
-                logicBoard[coordinates[0]][coordinates[1]] = ' ';
-                logicBoard[coordinates[2]][coordinates[3]] = piece;
-                
-                board.printBoard();
-                
-                logicBoard[0][8] = 't';
+            promoteToKing();
+            board.printBoard();
+            
+            logicBoard[0][8] = 't';
             }
-            
-            // test
-            // e3-d4
-            // f6-g5
-            // g3-f4
-            // g5-e3
-            // e3-c5
-            
-        
-        
-        } else if(isMoveValid(coordinates) == 2){
-            
+    }
+    
+    public void capturingMove(int[] coordinates){
+                    
             char enemy = 'O';
             if(player.getPlayer() == 'O') enemy = 'X';
             
@@ -113,14 +116,11 @@ public class Logic {
             logicBoard[coordinates[0]][coordinates[1]] = ' ';
             logicBoard[coordinates[2]][coordinates[3]] = piece;
             
-            
+            promoteToKing();
             board.printBoard();
             if(!(checkMandatoryCapture())) logicBoard[0][8] = 't';
-
-        } else if(isMoveValid(coordinates) == 0) System.out.println("Move invalid");
-        
-        return logicBoard;
     }
+    
     
     public int isMoveValid(int[] coordinates){
         
@@ -173,7 +173,7 @@ public class Logic {
         return false;
     }
     
-    public void promoteToKing(){ //działa z opóźnieniem jednego ruchu
+    public void promoteToKing(){
         
         for(int i = 0; i < 8; i++){
             if(logicBoard[0][i] == 'X') logicBoard[0][i] = 'B';
@@ -184,11 +184,38 @@ public class Logic {
         }
     }
     
-    public void kingMove(){
-        //to do
+    public int isKingMoveValid(int[] coordinates){
+        logicBoard = board.getBoard();
+        int statement = 0;
+        if(logicBoard[coordinates[0]][coordinates[1]] == player.getBlackKing() || logicBoard[coordinates[0]][coordinates[1]] == player.getWhiteKing()) statement = 1;
+        
+        int i = coordinates[0];
+        int j = coordinates[1];
+        while(i < coordinates[2] && j < coordinates[3]){
+            if(logicBoard[i][j] != ' ') statement = 0;
+            
+            i++;
+            j++;
+        }
+        //wprowadzić pętlę dla bicia
+        
+        return statement;
     }
     
+    
     public boolean onePieceOnBoard(){
+        int counter = 0;
+        logicBoard = board.getBoard();
+        
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(logicBoard[i][j] != ' ') counter++;
+                if(counter > 1) break;
+            }
+            if(counter > 1) break;
+        }
+        
+        if(counter == 1) return true;
         return false;
     }
     

@@ -13,10 +13,6 @@ public class Game {
         this.logic = new Logic();
         this.scanner = new Scanner(System.in);
     }
-
-    
-    
-    
              
     public void start(){
         
@@ -36,10 +32,23 @@ public class Game {
         }
         
         
-        //end of the game //to do
-        System.out.println(logic.getPlayer() + " won!");
+        char winner = 'X';
+        if(logic.getPoints() > 0) winner = 'O';
+        System.out.println(winner + " won!");
+        
+        System.out.println("Do you want to play again? (y/n)");
+        String command = scanner.next();
+        if(command.equals("y")) newGame();
         
     }
+    
+    public void newGame(){
+        board.initializeBoard();
+        start();
+    }
+    
+    
+    
     
     public void commands(String command){
         
@@ -49,11 +58,20 @@ public class Game {
                                  + "help - shows all commands \n"
                                  + "print - prints the board \n"
                                  + "rules - shows rules of the game \n"
-                                 + "exit - ends the game");
+                                 + "exit - ends the game \n"
+                                 + "save - saves the game \n"
+                                 + "load - loads the game \n");
                 break;
             }
             case "rules":{
-                System.out.println("(there will be printed rules of the game)");
+                System.out.println("- White pieces are represented by \"O\"\n" +
+                                   "- Black pieces are represented by \"X\"\n" +
+                                   "- Regular pieces moves diagonally by one field forward\n" +
+                                   "- Capturing is mandatory\n" +
+                                   "- Pieces who reach end of the board are promoted to kings\n" +
+                                   "- White kings are represented by \"A\"\n" +
+                                   "- Black kings are represented by \"B\"\n" +
+                                   "- Kings can move diagonally by more than one field forward amd backward");
                 break;
             }
             case "print":{
