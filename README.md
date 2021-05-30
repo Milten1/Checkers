@@ -24,4 +24,4 @@ example - "a1-c3" where "a1" is starting field and "c3" is ending field
 - "rules" shows rules of the game
 - "exit" - ends the game
 - "save" saves the game
-- "load" loads the g
+- "load" loads the game
