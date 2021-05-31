@@ -6,11 +6,11 @@ public class Board {
     private Pieces piece;
     
     public Board(){
-        board = new char[8][9]; // additional field [0][8] for storing true false statement
+        board = new char[8][9]; // additional field [0][8] for storing true-false statement
         this.piece = new Pieces();
         
-        //initializeBoard();
-        captureTest();
+        initializeBoard();
+        //captureTest();
     }
     
     public void initializeBoard(){
@@ -85,11 +85,16 @@ public class Board {
 //        board[4][4] = 'X';
 //        board[4][2] = 'O';
 //        board[2][2] = 'X';
-//        board[6][0] = 'O';
+//        board[6][1] = 'O';
 //        board[1][1] = 'X';
 
-          board[1][1] = 'O';
-          board[2][2] = 'X';
+//          board[1][1] = 'O';
+//          board[2][2] = 'X';
+          board[6][5] = 'A';
+          board[3][2] = 'B';
+          board[2][1] = 'O';
+          board[7][6] = 'X';
+          board[0][7] = 'X';
         
     }
     

@@ -75,11 +75,17 @@ public class Logic {
 
         logicBoard[0][8] = 'f';
         
-        if((isMoveValid(coordinates) == 1) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 1) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 1)){
+        if(piece == player.getBlackKing() || piece == player.getWhiteKing()){
+            if(isKingMoveValid(coordinates) == 1) normalMove(coordinates);
+            else if(isKingMoveValid(coordinates) == 2) capturingMove(coordinates);
+            else if(isKingMoveValid(coordinates) == 0) System.out.println("(KingTest) Move invalid");
+        }
+        
+        if(isMoveValid(coordinates) == 1){
             normalMove(coordinates);
-        } else if((isMoveValid(coordinates) == 2) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 2) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 2)){
+        } else if(isMoveValid(coordinates) == 2){
             capturingMove(coordinates);
-        } else if((isMoveValid(coordinates) == 0) || (piece == player.getWhiteKing() && isKingMoveValid(coordinates) == 0) || (piece == player.getBlackKing() && isKingMoveValid(coordinates) == 0)){
+        } else if(isMoveValid(coordinates) == 0){
             System.out.println("Move invalid");
         }
         
@@ -103,10 +109,10 @@ public class Logic {
     
     public void capturingMove(int[] coordinates){
                     
-            char enemy = 'O';
-            if(player.getPlayer() == 'O') enemy = 'X';
+            char enemy = player.getWhite();
+            if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
             
-            if(enemy == 'O') points--;
+            if(enemy == player.getWhite()) points--;
             else points++;
             
             
@@ -124,8 +130,11 @@ public class Logic {
     
     public int isMoveValid(int[] coordinates){
         
-        char enemy = 'O';
-        if(player.getPlayer() == 'O') enemy = 'X';
+        char enemy = player.getWhite();
+        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
+        
+        char enemyKing = player.getWhiteKing();
+        if(player.getPlayer() == player.getWhite()) enemy = player.getBlackKing();
         
         int[] enemyCoor = new int[2];
         enemyCoor[0] = (coordinates[0]+coordinates[2])/2;
@@ -138,6 +147,8 @@ public class Logic {
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 1;
         
         if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer() ||
+                (Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemyKing)
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement for capturing
         
         return 0;
@@ -147,21 +158,32 @@ public class Logic {
         logicBoard = board.getBoard();
         
         
-        char enemy = 'O';
-        if(player.getPlayer() == 'O') enemy = 'X';
+        char enemy = player.getWhite();
+        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
         
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 try{
-                    if((logicBoard[i][j] == 'X' && logicBoard[i+1][j+1] == 'O' && logicBoard[i+2][j+2] == ' ') ||
-                       (logicBoard[i][j] == 'X' && logicBoard[i-1][j-1] == 'O' && logicBoard[i-2][j-2] == ' ') ||
-                       (logicBoard[i][j] == 'X' && logicBoard[i+1][j-1] == 'O' && logicBoard[i+2][j-2] == ' ') ||
-                       (logicBoard[i][j] == 'X' && logicBoard[i-1][j+1] == 'O' && logicBoard[i-2][j+2] == ' ')
+                    if((logicBoard[i][j] == player.getBlack() && logicBoard[i+1][j+1] == player.getWhite() && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i-1][j-1] == player.getWhite() && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i+1][j-1] == player.getWhite() && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i-1][j+1] == player.getWhite() && logicBoard[i-2][j+2] == ' ')
                             
-                   ||( (logicBoard[i][j] == '0' && logicBoard[i+1][j+1] == 'X' && logicBoard[i+2][j+2] == ' ') ||
-                       (logicBoard[i][j] == '0' && logicBoard[i-1][j-1] == 'X' && logicBoard[i-2][j-2] == ' ') ||
-                       (logicBoard[i][j] == '0' && logicBoard[i+1][j-1] == 'X' && logicBoard[i+2][j-2] == ' ') ||
-                       (logicBoard[i][j] == '0' && logicBoard[i-1][j+1] == 'X' && logicBoard[i-2][j+2] == ' '))) return true;
+                   || ((logicBoard[i][j] == player.getWhite() && logicBoard[i+1][j+1] == player.getBlack() && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i-1][j-1] == player.getBlack() && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i+1][j-1] == player.getBlack() && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i-1][j+1] == player.getBlack() && logicBoard[i-2][j+2] == ' '))
+                            
+                            
+                   || ((logicBoard[i][j] == player.getBlack() && logicBoard[i+1][j+1] == player.getWhiteKing() && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i-1][j-1] == player.getWhiteKing() && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i+1][j-1] == player.getWhiteKing() && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getBlack() && logicBoard[i-1][j+1] == player.getWhiteKing() && logicBoard[i-2][j+2] == ' '))
+                            
+                   || ((logicBoard[i][j] == player.getWhite() && logicBoard[i+1][j+1] == player.getBlackKing() && logicBoard[i+2][j+2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i-1][j-1] == player.getBlackKing() && logicBoard[i-2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i+1][j-1] == player.getBlackKing() && logicBoard[i+2][j-2] == ' ') ||
+                       (logicBoard[i][j] == player.getWhite() && logicBoard[i-1][j+1] == player.getBlackKing() && logicBoard[i-2][j+2] == ' '))) return true;
                     
                 }catch(ArrayIndexOutOfBoundsException e){
                     //nothing
@@ -173,14 +195,18 @@ public class Logic {
         return false;
     }
     
+    public boolean checkMandatoryCaptureForKings(){
+        return false;
+    }
+    
     public void promoteToKing(){
         
         for(int i = 0; i < 8; i++){
-            if(logicBoard[0][i] == 'X') logicBoard[0][i] = 'B';
+            if(logicBoard[0][i] == player.getBlack()) logicBoard[0][i] = player.getBlackKing();
         }
         
         for(int i = 0; i < 8; i++){
-            if(logicBoard[7][i] == 'O') logicBoard[7][i] = 'A';
+            if(logicBoard[7][i] == player.getWhite()) logicBoard[7][i] = player.getWhiteKing();
         }
     }
     
@@ -191,13 +217,23 @@ public class Logic {
         
         int i = coordinates[0];
         int j = coordinates[1];
-        while(i < coordinates[2] && j < coordinates[3]){
-            if(logicBoard[i][j] != ' ') statement = 0;
+        
+        //zrobić łącznie cztery pętle zależnie od kierunku ruchu
+        
+        while(i > coordinates[2] && j > coordinates[3]){
+            System.out.println("test"); //////////////////////////doesnt print
+            if(logicBoard[i][j] != ' '){
+                statement = 0;
+                break;
+            }
+            if(logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlack() ||
+               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhite() ||
+               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhiteKing() ||
+               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlackKing()) statement = 2;
             
             i++;
             j++;
         }
-        //wprowadzić pętlę dla bicia
         
         return statement;
     }
