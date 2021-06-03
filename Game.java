@@ -44,6 +44,7 @@ public class Game {
     
     public void newGame(){
         board.initializeBoard();
+        logic.changePlayer();
         start();
     }
     
