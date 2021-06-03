@@ -81,19 +81,21 @@ public class Logic {
             else if(isKingMoveValid(coordinates) == 0) System.out.println("(KingTest) Move invalid");
         }
         
-        if(isMoveValid(coordinates) == 1){
-            normalMove(coordinates);
-        } else if(isMoveValid(coordinates) == 2){
-            capturingMove(coordinates);
-        } else if(isMoveValid(coordinates) == 0){
-            System.out.println("Move invalid");
+        if(piece == player.getBlack() || piece == player.getWhite()){
+            if(isMoveValid(coordinates) == 1){
+                normalMove(coordinates);
+            } else if(isMoveValid(coordinates) == 2){
+                capturingMove(coordinates);
+            } else if(isMoveValid(coordinates) == 0){
+                System.out.println("Move invalid");
+            }
         }
         
         return logicBoard;
     }
     
     public void normalMove(int[] coordinates){
-        if(checkMandatoryCapture()){
+        if(checkMandatoryCapture() || CheckMandatoryCaptureForKings()){
             System.out.println("Capturing is mandatory");
         } else{
             char piece = logicBoard[coordinates[0]][coordinates[1]];
@@ -195,10 +197,6 @@ public class Logic {
         return false;
     }
     
-    public boolean checkMandatoryCaptureForKings(){
-        return false;
-    }
-    
     public void promoteToKing(){
         
         for(int i = 0; i < 8; i++){
@@ -213,29 +211,94 @@ public class Logic {
     public int isKingMoveValid(int[] coordinates){
         logicBoard = board.getBoard();
         int statement = 0;
-        if(logicBoard[coordinates[0]][coordinates[1]] == player.getBlackKing() || logicBoard[coordinates[0]][coordinates[1]] == player.getWhiteKing()) statement = 1;
         
-        int i = coordinates[0];
-        int j = coordinates[1];
+        int x = coordinates[0];
+        int y = coordinates[1];
         
-        //zrobić łącznie cztery pętle zależnie od kierunku ruchu
+        //[+-][  ][++]
+        //[  ][X ][  ]
+        //[--][  ][-+]
         
-        while(i > coordinates[2] && j > coordinates[3]){
-            System.out.println("test"); //////////////////////////doesnt print
-            if(logicBoard[i][j] != ' '){
-                statement = 0;
-                break;
+        if(coordinates[2] > coordinates[0] && coordinates[3] > coordinates[1]){
+//            System.out.println("right-up");
+            int j = coordinates[1]+1;
+            for(int i = coordinates[0]+1; i <= coordinates[2]; i++){
+//                System.out.println(i + "" + j);
+                if(logicBoard[i][j] != ' '){
+                    statement = 0;
+                    break;
+                }
+                j++;
+                statement = 1;
             }
-            if(logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlack() ||
-               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhite() ||
-               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhiteKing() ||
-               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlackKing()) statement = 2;
-            
-            i++;
-            j++;
         }
         
+        if(coordinates[2] > coordinates[0] && coordinates[3] < coordinates[1]){
+//            System.out.println("left-up");
+            int j = coordinates[1]-1;
+            for(int i = coordinates[0]+1; i <= coordinates[2]; i++){
+//                System.out.println(i + "" + j);
+                if(logicBoard[i][j] != ' '){
+                    statement = 0;
+                    break;
+                }
+                j--;
+                statement = 1;
+            }
+        }
+        
+        if(coordinates[2] < coordinates[0] && coordinates[3] < coordinates[1]){
+//            System.out.println("left-down");
+            int j = coordinates[1]-1;
+            for(int i = coordinates[0]-1; i >= coordinates[2]; i--){
+//                System.out.println(i + "" + j);
+                if(logicBoard[i][j] != ' '){
+                    statement = 0;
+                    break;
+                }
+                j--;
+                statement = 1;
+            }
+        }
+        
+        if(coordinates[2] < coordinates[0] && coordinates[3] > coordinates[1]){
+//            System.out.println("right-down");
+            int j = coordinates[1]+1;
+            for(int i = coordinates[0]-1; i >= coordinates[2]; i--){
+//                System.out.println(i + "" + j);
+                if(logicBoard[i][j] != ' '){
+                    statement = 0;
+                    break;
+                }
+                j++;
+                statement = 1;
+            }
+        }
+        
+        
+        
+        
+        
+//        while(x > coordinates[2] && y > coordinates[3]){
+//            System.out.println("test");
+//            if(logicBoard[x][y] != ' '){
+//                statement = 0;
+//                break;
+//            }
+//            if(logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlack() ||
+//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhite() ||
+//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhiteKing() ||
+//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlackKing()) statement = 2;
+//            
+//            x++;
+//            y++;
+//        }
+        
         return statement;
+    }
+    
+    public boolean CheckMandatoryCaptureForKings(){
+        return false; //to do
     }
     
     
