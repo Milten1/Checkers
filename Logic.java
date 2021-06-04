@@ -1,6 +1,12 @@
 
 package com.mycompany.checkers;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 public class Logic {
     private char[][] logicBoard;
     private Board board;
@@ -212,8 +218,11 @@ public class Logic {
         logicBoard = board.getBoard();
         int statement = 0;
         
-        int x = coordinates[0];
-        int y = coordinates[1];
+        char enemy = player.getWhite();
+        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
+        
+        char enemyKing = player.getWhiteKing();
+        if(player.getPlayer() == player.getWhite()) enemy = player.getBlackKing();
         
         //[+-][  ][++]
         //[  ][X ][  ]
@@ -230,6 +239,11 @@ public class Logic {
                 }
                 j++;
                 statement = 1;
+                try{
+                    if((logicBoard[i+1][j+1] == enemy && logicBoard[i+2][j+2] == ' ') || (logicBoard[i+1][j+1] == enemyKing && logicBoard[i+2][j+2] == ' ')) statement = 2;
+                }catch(ArrayIndexOutOfBoundsException e){
+                    //nothing
+                }
             }
         }
         
@@ -275,29 +289,36 @@ public class Logic {
             }
         }
         
-        
-        
-        
-        
-//        while(x > coordinates[2] && y > coordinates[3]){
-//            System.out.println("test");
-//            if(logicBoard[x][y] != ' '){
-//                statement = 0;
-//                break;
-//            }
-//            if(logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlack() ||
-//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhite() ||
-//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getWhiteKing() ||
-//               logicBoard[coordinates[2]-1][coordinates[3]-1] == player.getBlackKing()) statement = 2;
-//            
-//            x++;
-//            y++;
-//        }
-        
         return statement;
     }
     
     public boolean CheckMandatoryCaptureForKings(){
+        logicBoard = board.getBoard();
+        
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(logicBoard[i][j] == player.getBlackKing() || logicBoard[i][j] == player.getWhiteKing()){
+                    //sprawdza czy jest do zbicia pionek lub damka
+                    
+                    try{
+                        while(true){
+                            if((logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'X' && logicBoard[i+1][j+1] == ' ') ||
+                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'O' && logicBoard[i+1][j+1] == ' ') ||
+                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'A' && logicBoard[i+1][j+1] == ' ') ||                            
+                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'B' && logicBoard[i+1][j+1] == ' '))return true;
+                        }
+                    }catch(ArrayIndexOutOfBoundsException e){
+                        System.out.println("error");
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
+        
         return false; //to do
     }
     
@@ -314,16 +335,63 @@ public class Logic {
             if(counter > 1) break;
         }
         
-        if(counter == 1) return true;
-        return false;
+        return counter == 1;
     }
     
     public void saveGame(String name){
-        // saving game
+        name = name + ".txt";
+        try{
+            File save = new File(name);
+            if (save.createNewFile()) {
+                
+                //saving game
+                try {
+                    FileWriter saver = new FileWriter(name);
+                    
+                    logicBoard = board.getBoard();
+                    
+                    for(int i = 0; i < 8; i++){
+                        for(int j = 0; j < 8; j++){
+                            saver.write(logicBoard[i][j] + "\n");
+                        }
+                    }
+                    
+                    saver.close();
+                } catch (IOException e) {
+                    System.out.println("An error occurred");
+                    e.printStackTrace();
+                }
+                
+                System.out.println("Game saved in: " + save.getName());
+            } else System.out.println("Save already exists");
+            
+        }catch(IOException e){
+            System.out.println("An error occurred");
+            e.printStackTrace();
+        }
     }
     
     public void loadGame(String name){
-        // loading game
+        name = name + ".txt";
+        try(Scanner scan  = new Scanner(Paths.get(name))){
+            logicBoard = board.getBoard();
+            
+            for(int i = 0; i < 8; i++){
+                for(int j = 0; j < 8; j++){
+                    if(scan.hasNextLine()){
+                    String row = scan.nextLine();
+                    logicBoard[i][j] =  row.charAt(0);
+                    }
+                }
+            }
+            
+            System.out.println("Game loaded");
+            board.printBoard();
+            
+        }catch(Exception e){
+            System.out.println("An error occured");
+            e.printStackTrace();
+        }
     }
     
     

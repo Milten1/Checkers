@@ -81,8 +81,8 @@ public class Board {
             }
         }
 
-          board[6][0] = 'X';
-          board[1][1] = 'A';
+          board[5][5] = 'X';
+          board[3][3] = 'A';
         
     }
     
