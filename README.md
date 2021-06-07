@@ -14,6 +14,7 @@ example - "a1-c3" where "a1" is starting field and "c3" is ending field
 - Regular pieces moves diagonally by one field forward
 - Capturing is mandatory
 - Pieces who reach end of the board are promoted to kings
+- Capturing with kings in not mandatory
 - White kings are represented by "A"
 - Black kings are represented by "B"
 - Kings can move diagonally by more than one field forward amd backward
