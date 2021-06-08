@@ -33,6 +33,10 @@ public class Logic {
         return player.getPlayer();
     }
     
+    public char getPlayerKing(){
+        return player.getPlayerKing();
+    }
+    
     public int[] convertCommandToCoordinates(String command){
         
         
@@ -83,8 +87,8 @@ public class Logic {
         
         if(piece == player.getBlackKing() || piece == player.getWhiteKing()){
             if(isKingMoveValid(coordinates) == 1) normalMove(coordinates);
-            else if(isKingMoveValid(coordinates) == 2) capturingMove(coordinates);
-            else if(isKingMoveValid(coordinates) == 0) System.out.println("(KingTest) Move invalid");
+            else if(isKingMoveValid(coordinates) == 2) capturingMoveForKings(coordinates);
+            else if(isKingMoveValid(coordinates) == 0) System.out.println("Move invalid");
         }
         
         if(piece == player.getBlack() || piece == player.getWhite()){
@@ -101,7 +105,7 @@ public class Logic {
     }
     
     public void normalMove(int[] coordinates){
-        if(checkMandatoryCapture() || CheckMandatoryCaptureForKings()){
+        if(checkMandatoryCapture()){
             System.out.println("Capturing is mandatory");
         } else{
             char piece = logicBoard[coordinates[0]][coordinates[1]];
@@ -116,11 +120,8 @@ public class Logic {
     }
     
     public void capturingMove(int[] coordinates){
-                    
-            char enemy = player.getWhite();
-            if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
-            
-            if(enemy == player.getWhite()) points--;
+        
+            if(player.getEnemy() == player.getWhite()) points--;
             else points++;
             
             
@@ -138,12 +139,6 @@ public class Logic {
     
     public int isMoveValid(int[] coordinates){
         
-        char enemy = player.getWhite();
-        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
-        
-        char enemyKing = player.getWhiteKing();
-        if(player.getPlayer() == player.getWhite()) enemy = player.getBlackKing();
-        
         int[] enemyCoor = new int[2];
         enemyCoor[0] = (coordinates[0]+coordinates[2])/2;
         enemyCoor[1] = (coordinates[1]+coordinates[3])/2;
@@ -154,20 +149,16 @@ public class Logic {
         if((Math.abs(coordinates[0] - coordinates[2]) == 1) && (Math.abs(coordinates[1] - coordinates[3]) == 1) && (logicBoard[coordinates[2]][coordinates[3]] == ' ') 
             && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 1;
         
-        if((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemy)
-            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer() ||
-                (Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == enemyKing)
-            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) return 2; //statement for capturing
+        if(((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == player.getEnemy())
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer()) ||
+                ((Math.abs(coordinates[0] - coordinates[2]) == 2) && (Math.abs(coordinates[1] - coordinates[3]) == 2) && (logicBoard[enemyCoor[0]][enemyCoor[1]] == player.getEnemyKing())
+            && logicBoard[coordinates[0]][coordinates[1]] == player.getPlayer())) return 2; //statement for capturing
         
         return 0;
     }
     
     public boolean checkMandatoryCapture(){
         logicBoard = board.getBoard();
-        
-        
-        char enemy = player.getWhite();
-        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
         
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -218,12 +209,6 @@ public class Logic {
         logicBoard = board.getBoard();
         int statement = 0;
         
-        char enemy = player.getWhite();
-        if(player.getPlayer() == player.getWhite()) enemy = player.getBlack();
-        
-        char enemyKing = player.getWhiteKing();
-        if(player.getPlayer() == player.getWhite()) enemy = player.getBlackKing();
-        
         //[+-][  ][++]
         //[  ][X ][  ]
         //[--][  ][-+]
@@ -240,7 +225,7 @@ public class Logic {
                 j++;
                 statement = 1;
                 try{
-                    if((logicBoard[i+1][j+1] == enemy && logicBoard[i+2][j+2] == ' ') || (logicBoard[i+1][j+1] == enemyKing && logicBoard[i+2][j+2] == ' ')) statement = 2;
+                    if((logicBoard[i+1][j+1] == player.getEnemy() && logicBoard[i+2][j+2] == ' ') || (logicBoard[i+1][j+1] == player.getEnemyKing() && logicBoard[i+2][j+2] == ' ')) statement = 2;
                 }catch(ArrayIndexOutOfBoundsException e){
                     //nothing
                 }
@@ -292,35 +277,14 @@ public class Logic {
         return statement;
     }
     
-    public boolean CheckMandatoryCaptureForKings(){
-        logicBoard = board.getBoard();
-        
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                if(logicBoard[i][j] == player.getBlackKing() || logicBoard[i][j] == player.getWhiteKing()){
-                    //sprawdza czy jest do zbicia pionek lub damka
-                    
-                    try{
-                        while(true){
-                            if((logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'X' && logicBoard[i+1][j+1] == ' ') ||
-                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'O' && logicBoard[i+1][j+1] == ' ') ||
-                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'A' && logicBoard[i+1][j+1] == ' ') ||                            
-                               (logicBoard[i+1][j+1] == ' ' && logicBoard[i+1][j+1] == 'B' && logicBoard[i+1][j+1] == ' '))return true;
-                        }
-                    }catch(ArrayIndexOutOfBoundsException e){
-                        System.out.println("error");
-                        break;
-                    }
-                }
-            }
-        }
-        
-        
-        
-        
-        
-        return false; //to do
+    
+    
+    
+    public void capturingMoveForKings(int[] coordinates){
+        System.out.println("Chwilowo brak metody");
     }
+    
+    
     
     
     public boolean onePieceOnBoard(){
@@ -343,8 +307,6 @@ public class Logic {
         try{
             File save = new File(name);
             if (save.createNewFile()) {
-                
-                //saving game
                 try {
                     FileWriter saver = new FileWriter(name);
                     

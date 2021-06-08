@@ -9,8 +9,8 @@ public class Board {
         board = new char[8][9]; // additional field [0][8] for storing true-false statement
         this.piece = new Pieces();
         
-        initializeBoard();
-        //captureTest();
+        //initializeBoard();
+        captureTest();
     }
     
     public void initializeBoard(){
@@ -81,8 +81,9 @@ public class Board {
             }
         }
 
-          board[5][5] = 'X';
-          board[3][3] = 'A';
+          board[6][6] = 'X';
+          board[1][1] = 'A';
+          board[4][4] = 'A';
         
     }
     
